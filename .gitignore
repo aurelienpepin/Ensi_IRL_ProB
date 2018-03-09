@@ -11,11 +11,9 @@
 
 examples/tools/nbactions\.xml
 .res
-#Temporary files
+
+# Temporary files
 *~
 
-*.res
-
-*.ass
-
-*.success
+# LOG files
+prob_log.txt
