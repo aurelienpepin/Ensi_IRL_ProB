@@ -44,7 +44,7 @@ public class Test_ProB {
      */
     protected static void testProB(Api api) throws IOException, ModelTranslationError {
         // Load the state space
-        StateSpace sspace = api.b_load("machines/ACounter.mch");
+        StateSpace sspace = api.b_load("machines/scheduler.mch");
         
         // There's a one-to-one relationship between the StateSpace and the
         // model, so we can get the model from the StaceSpace
@@ -78,5 +78,8 @@ public class Test_ProB {
         
         System.out.println(destination2.getOutTransitions(true).get(0));
         System.out.println(destination2.getValues());
+        
+        System.out.println("ALEATOIRE");
+        System.out.println(sspace.getRoot().anyEvent(null).anyEvent(null).anyEvent(null).getStateRep());
     }
 }

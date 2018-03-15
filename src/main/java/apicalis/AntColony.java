@@ -37,6 +37,8 @@ public class AntColony {
      * @return A random point s of the search space S.
      */
     public State opRand() {
+        // Random can be constructed through the <anyEvent> method!
+        // How deep should we go?
         throw new UnsupportedOperationException("TODO: AntColony@opRand");
     }
     
