@@ -8,6 +8,7 @@ import de.prob.scripting.Api;
 import de.prob.scripting.ModelTranslationError;
 import de.prob.statespace.State;
 import de.prob.statespace.StateSpace;
+import de.prob.statespace.Transition;
 import java.io.IOException;
 
 /**
@@ -43,7 +44,7 @@ public class Test_ProB {
      */
     protected static void testProB(Api api) throws IOException, ModelTranslationError {
         // Load the state space
-        StateSpace sspace = api.b_load("machines/scheduler.mch");
+        StateSpace sspace = api.b_load("machines/ACounter.mch");
         
         // There's a one-to-one relationship between the StateSpace and the
         // model, so we can get the model from the StaceSpace
@@ -53,5 +54,29 @@ public class Test_ProB {
         for (Operation o : machine.getOperations()) {
             System.out.println("Operation: " + o.getName());
         }
+        
+        // Racine du model-checker
+        Transition firstTransition = sspace.getRoot().getOutTransitions(true).get(0);
+        State destination = firstTransition.getDestination();
+        
+        destination.explore();
+
+        System.out.println("---");        
+        System.out.println(sspace.printOps(sspace.getRoot()));
+        System.out.println(sspace.printState(sspace.getRoot()));
+        
+        System.out.println("---");
+        System.out.println(sspace.printOps(destination));
+        System.out.println(sspace.printState(destination));
+        
+        Transition secondTransition = destination.getOutTransitions(true).get(0);
+        State destination2 = secondTransition.getDestination();
+        
+        System.out.println("---");
+        System.out.println(sspace.printOps(destination2));
+        System.out.println(sspace.printState(destination2));
+        
+        System.out.println(destination2.getOutTransitions(true).get(0));
+        System.out.println(destination2.getValues());
     }
 }
