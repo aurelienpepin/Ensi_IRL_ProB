@@ -49,6 +49,13 @@ public class HuntingSite {
     public void addFail() {
         this.fails++;
     }
+    
+    /**
+     * Reset fails if the exploration was successful.
+     */
+    public void resetFails() {
+        this.fails = 0;
+    }
 
     
     public State getSite() {

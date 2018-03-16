@@ -60,7 +60,7 @@ public class AntColony {
             throw new IllegalArgumentException("Bad number of ants");
         
         for (int i = 0; i < n; i++) {
-            this.ants.add(new Ant(LOCAL_PATIENCE, ANT_MEMORY));
+            this.ants.add(new Ant(LOCAL_PATIENCE, ANT_MEMORY, this));
         }
     }
     
@@ -69,7 +69,7 @@ public class AntColony {
      * OPERATOR. Random operator (O_rand).
      * @return A random point s of the search space S.
      */
-    public State opRand() {
+    public static State opRand() {
         // Random can be constructed through the <anyEvent> method!
         // How deep should we go?
         throw new UnsupportedOperationException("TODO: AntColony@opRand");
@@ -80,7 +80,7 @@ public class AntColony {
      * @param s The first point, already visited.    
      * @return  A new point in the neighborhood of s.
      */
-    public State opExplo(State s) {
+    public static State opExplo(State s) {
         throw new UnsupportedOperationException("TODO: AntColony@opExplo");
     }
     
@@ -108,5 +108,9 @@ public class AntColony {
         }
         
         throw new UnsupportedOperationException("TODO: AntColony@simulate");
+    }
+
+    public State getNest() {
+        return nest;
     }
 }
