@@ -90,6 +90,23 @@ public class AntColony {
      * Ants are well initialized before this method call.
      */
     public void simulate() {
+        // The initial site of the nest is the root of the state space.
+        int T = 0;
         
+        while (T < 500) {
+            // Local behaviour of ants
+            for (Ant a : ants)
+                a.search();
+            
+            // The nest should be moved
+            if (T == GLOBAL_PATIENCE) {
+                // TODO: Clear ants' hunting sites and assign the best solution.
+                throw new UnsupportedOperationException("TODO: AntColony@simulate");
+            }
+            
+            T++;
+        }
+        
+        throw new UnsupportedOperationException("TODO: AntColony@simulate");
     }
 }
