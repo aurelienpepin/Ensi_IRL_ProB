@@ -38,6 +38,7 @@ public class AntColony {
     
     // From the thesis (p. 128)
     private final int GLOBAL_PATIENCE = 2 * (LOCAL_PATIENCE + 1) * ANT_MEMORY;
+    private final int GLOBAL_AMPLITUDE = 15;
     
     
     /**

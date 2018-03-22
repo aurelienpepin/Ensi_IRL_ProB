@@ -45,6 +45,11 @@ public class Ant {
      */
     private AntColony colony;
     
+    /**
+     * Local amplitude for the ant.
+     */
+    private int amplitude;
+    
     
     /**
      * CONSTRUCTOR. Initialize an ant.
@@ -57,6 +62,7 @@ public class Ant {
             throw new IllegalArgumentException("No negative parameters for an ant.");
         
         this.patience = patience;
+        this.amplitude = 5; // TODO
         this.memorySize = memorySize;
         
         this.sites = Arrays.asList(new HuntingSite[memorySize]); // Immutable
@@ -74,7 +80,7 @@ public class Ant {
     public void search() {
         // First, find new hunting sites if needed.
         if (currentSize < memorySize) {
-            State huntingState = AntColony.opExplo(colony.getNest());
+            State huntingState = AntColony.opExplo(colony.getNest(), amplitude);
             HuntingSite huntingSite = new HuntingSite(huntingState);
             
             this.sites.set(currentSize, huntingSite);
@@ -89,10 +95,24 @@ public class Ant {
             /**
              * LOCAL EXPLORATION.
              */
-            // TODO
+            State exploreSite = AntColony.opExplo(hSite.getSite(), amplitude);
+            
+            // Evaluation
+            if (f(exploreSite) < f(hSite)) {
+                hSite.setSite(exploreSite);
+                hSite.resetFails();
+            } else {
+                hSite.addFail();
+                
+                // The local patience was overtaken
+                if (hSite.shouldBeForgotten(patience)) {
+                    this.sites.remove(hSite);
+                    currentSize--;
+                }
+            }
         }
         
-        throw new UnsupportedOperationException("TODO: Ant@search");    
+        throw new UnsupportedOperationException("TODO: Ant@search/EVALUATION");    
     }
     
     /**

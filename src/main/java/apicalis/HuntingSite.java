@@ -15,7 +15,7 @@ public class HuntingSite {
     /**
      * The state where the ant hunts.
      */
-    private final State site;
+    private State site;
     
     /**
      * The number of fails in this state.
@@ -40,7 +40,7 @@ public class HuntingSite {
      * @return True if the site should be forgotten.
      */
     public boolean shouldBeForgotten(int patience) {
-        return this.fails == patience;
+        return this.fails >= patience;
     }
     
     /**
@@ -63,5 +63,9 @@ public class HuntingSite {
 
     public int getFails() {
         return fails;
+    }
+
+    public void setSite(State site) {
+        this.site = site;
     }
 }
