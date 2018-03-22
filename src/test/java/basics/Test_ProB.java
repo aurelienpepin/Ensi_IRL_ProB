@@ -81,5 +81,9 @@ public class Test_ProB {
         
         System.out.println("ALEATOIRE");
         System.out.println(sspace.getRoot().anyEvent(null).anyEvent(null).anyEvent(null).getStateRep());
+        
+        System.out.println("COMPARAISONS");
+        System.out.println(destination2.getId());
+        System.out.println(destination2.getOutTransitions());
     }
 }

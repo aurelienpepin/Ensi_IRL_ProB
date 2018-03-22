@@ -1,8 +1,10 @@
 package apicalis;
 
 import de.prob.statespace.State;
+import de.prob.statespace.Transition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Modelling of the colony of Pachycondyla Apicalis.
@@ -47,8 +49,6 @@ public class AntColony {
         this.nest = root;
         this.ants = new ArrayList<>();
         this.createAnts(n);
-        
-        throw new UnsupportedOperationException("TODO: AntColony@constructor");
     }
     
     /**
@@ -66,22 +66,40 @@ public class AntColony {
     
     
     /**
-     * OPERATOR. Random operator (O_rand).
-     * @return A random point s of the search space S.
-     */
-    public static State opRand() {
-        // Random can be constructed through the <anyEvent> method!
-        // How deep should we go?
-        throw new UnsupportedOperationException("TODO: AntColony@opRand");
-    }
-    
-    /**
      * OPERATOR. Neighborhood operator (O_explo).
      * @param s The first point, already visited.    
+     * @param amplitude Maximum number of followed transitions. 
      * @return  A new point in the neighborhood of s.
      */
-    public static State opExplo(State s) {
-        throw new UnsupportedOperationException("TODO: AntColony@opExplo");
+    public static State opExplo(State s, int amplitude) {
+        if (s == null || amplitude < 1)
+            return null;
+        
+        // Number of random transitions to follow
+        ThreadLocalRandom rand = ThreadLocalRandom.current();
+        int toFollow = rand.nextInt(amplitude);
+        
+        State randState = randomStateFrom(s, rand);
+        
+        // TODO. Check NULL values
+        while (toFollow > 0) {
+            randState = randomStateFrom(randState, rand);
+            toFollow--;
+        }
+        
+        return randState;
+    }
+    
+    private static State randomStateFrom(State s, ThreadLocalRandom rand) {
+        List<Transition> transitions = s.getOutTransitions();
+        State randState = null;
+        
+        if (transitions.size() > 0) {
+            int randIndex = rand.nextInt(transitions.size());
+            randState = transitions.get(randIndex).getDestination();
+        }
+        
+        return randState;
     }
     
     
@@ -93,7 +111,7 @@ public class AntColony {
         // The initial site of the nest is the root of the state space.
         int T = 0;
         
-        while (T < 500) {
+        while (T < Integer.MAX_VALUE) {
             // Local behaviour of ants
             for (Ant a : ants)
                 a.search();

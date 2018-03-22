@@ -56,7 +56,6 @@ public class HuntingSite {
     public void resetFails() {
         this.fails = 0;
     }
-
     
     public State getSite() {
         return site;
