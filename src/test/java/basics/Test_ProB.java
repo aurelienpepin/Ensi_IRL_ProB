@@ -1,6 +1,8 @@
 package basics;
 
 import de.prob.Main;
+import de.prob.animator.domainobjects.AbstractEvalResult;
+import de.prob.animator.domainobjects.IEvalElement;
 import de.prob.model.classicalb.ClassicalBMachine;
 import de.prob.model.classicalb.ClassicalBModel;
 import de.prob.model.classicalb.Operation;
@@ -10,6 +12,8 @@ import de.prob.statespace.State;
 import de.prob.statespace.StateSpace;
 import de.prob.statespace.Transition;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * First manipulation of the ProB API.
@@ -79,10 +83,20 @@ public class Test_ProB {
 //        System.out.println(destination2.getOutTransitions(true).get(0));
 //        System.out.println(destination2.getValues());
         
-        System.out.println("ALEATOIRE");
-        System.out.println(sspace.getRoot().anyEvent(null).anyEvent(null).anyEvent(null).getValues());
+        System.out.println(sspace.getRoot().getValues());
         
-        System.out.println("COMPARAISONS");
+        System.out.println("ALEATOIRE");
+        Map<IEvalElement, AbstractEvalResult> values = sspace.getRoot().anyEvent(null).anyEvent(null).anyEvent(null).getValues();
+
+        System.out.println(values);
+        
+        for (Entry<IEvalElement, AbstractEvalResult> entry : values.entrySet()) {
+            IEvalElement elem = entry.getKey();
+            AbstractEvalResult value = entry.getValue();
+            System.out.println(elem.getCode() + " <--> " + value.getId() + " " + value.toString()) ;
+        }
+        
+//        System.out.println("COMPARAISONS");
 //        System.out.println(destination2.getId());
 //        System.out.println(destination2.getOutTransitions());
     }

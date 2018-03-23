@@ -1,9 +1,14 @@
 package apicalis;
 
+import de.prob.animator.domainobjects.AbstractEvalResult;
+import de.prob.animator.domainobjects.IEvalElement;
 import de.prob.statespace.State;
 import de.prob.statespace.Transition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -31,6 +36,12 @@ public class AntColony {
     private float amplitude;
     
     /**
+     * Final searched values.
+     * Should be valid according to the B syntax.
+     */
+    private Map<String, String> finalValues;
+    
+    /**
      * Constants for ants parameters.
      */
     private final int LOCAL_PATIENCE = 5;
@@ -45,11 +56,14 @@ public class AntColony {
      * CONSTRUCTOR. Initialize a list of n ants.
      * @param n     Number of ants
      * @param root  Root of the state space, initial position of the nest
+     * @param finalValues  Set of state values (variables, relations) in B.
      */
-    public AntColony(int n, State root) {
+    public AntColony(int n, State root, Map<String, String> finalValues) {
         this.nest = root;
         this.ants = new ArrayList<>();
         this.createAnts(n);
+        
+        this.finalValues = finalValues;
     }
     
     /**
@@ -142,7 +156,14 @@ public class AntColony {
         if (state == null)
             return 1;
         
-        // WIP        
+        // Set of variables and relations
+        Set<Entry<IEvalElement, AbstractEvalResult>> values;
+        values = state.getValues().entrySet();
+
+        for (Entry<IEvalElement, AbstractEvalResult> entry : values) {
+            System.out.println(entry.getKey().getCode() + " <-> " + entry.getValue());
+        }
+        
         return 1;
     }
     

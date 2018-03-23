@@ -7,6 +7,8 @@ import de.prob.scripting.Api;
 import de.prob.scripting.ModelTranslationError;
 import de.prob.statespace.StateSpace;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Combination of ProB Api and Apicalis.
@@ -35,7 +37,7 @@ public class Ant_ProB {
     
     private static void apicalisProB(Api api) throws IOException, ModelTranslationError {
         // Load the state space
-        StateSpace sspace = api.b_load("machines/scheduler.mch");
+        StateSpace sspace = api.b_load("machines/rbac/RBAC_Model.mch");
         
         ClassicalBModel model = (ClassicalBModel) sspace.getModel();
         ClassicalBMachine machine = model.getMainMachine();
@@ -43,7 +45,12 @@ public class Ant_ProB {
         /**
          * APICALIS ALGORITHM.
          */
-        AntColony colony = new AntColony(4, sspace.getRoot());
+        Map<String, String> finalValues = new HashMap<>();
+        finalValues.put("Customer", "{Bob,Paul}");
+        finalValues.put("Account", "{cpt1,cpt2,cpt3}");
+        finalValues.put("AccountCustomer", "{(cpt1?Bob),(cpt2?Bob),(cpt3?Paul)}");
+        
+        AntColony colony = new AntColony(4, sspace.getRoot(), finalValues);
         colony.simulate();
     }
 }
