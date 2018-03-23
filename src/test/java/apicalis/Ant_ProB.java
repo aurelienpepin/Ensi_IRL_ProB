@@ -48,7 +48,7 @@ public class Ant_ProB {
         Map<String, String> finalValues = new HashMap<>();
         finalValues.put("Customer", "{Bob,Paul}");
         finalValues.put("Account", "{cpt1,cpt2,cpt3}");
-        finalValues.put("AccountCustomer", "{(cpt1?Bob),(cpt2?Bob),(cpt3?Paul)}");
+        finalValues.put("AccountOwner", "{(cpt1|->Bob),(cpt2|->Bob),(cpt3|->Paul)}");
         
         AntColony colony = new AntColony(4, sspace.getRoot(), finalValues);
         colony.simulate();

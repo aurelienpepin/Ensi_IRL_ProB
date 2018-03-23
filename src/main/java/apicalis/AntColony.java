@@ -36,10 +36,16 @@ public class AntColony {
     private float amplitude;
     
     /**
+     * Global best solution.
+     * Merging all local solutions from ants.
+     */
+    private PartialSolution bestSolution;
+    
+    /**
      * Final searched values.
      * Should be valid according to the B syntax.
      */
-    private Map<String, String> finalValues;
+    private final Map<String, String> finalValues;
     
     /**
      * Constants for ants parameters.
@@ -126,25 +132,27 @@ public class AntColony {
         // The initial site of the nest is the root of the state space.
         int T = 0;
         
-        while (T < Integer.MAX_VALUE) {
+        while (T < 1000) {
             // Local behaviour of ants
-            for (Ant a : ants)
-                a.search();
+            for (Ant a : ants) a.search();
             
-            // The nest should be moved
+            // If the nest should be moved
             if (T == GLOBAL_PATIENCE) {
-                // TODO: Clear ants' hunting sites and assign the best solution.
-                throw new UnsupportedOperationException("TODO: AntColony@simulate");
+                this.nest = this.getBestSolution();
+                
+                for (Ant a : ants)
+                    a.emptyMemory();
             }
             
             T++;
         }
         
-        throw new UnsupportedOperationException("TODO: AntColony@simulate");
+        // WIP: I should give the trace as a solution, not the only final state.
+        System.out.println("End of the algorithm. Best solution: " + this.bestSolution.getScore());
     }
     
     /**
-     * EVALUATION FONCTION in [0; 1].
+     * EVALUATION FONCTION in [0, 1].
      * Indicates the quality of an hunting site.
      *      - 0: perfect
      *      - 1: very bad
@@ -159,24 +167,26 @@ public class AntColony {
         int similarityMean = 0;
         
         // Computing Jaccard indexes for similarity between states
-        for (String propertyName : finalValues.keySet()) {
+        for (String propertyName : finalValues.keySet()) {            
             String partU = "card(" + propertyName + " /\\ " + finalValues.get(propertyName) + ")";
             String partD = "card(" + propertyName + " \\/ " + finalValues.get(propertyName) + ")";
             
             int resU = Integer.parseInt(state.eval(partU).toString());
             int resD = Integer.parseInt(state.eval(partD).toString());
             
-            similarityMean += (1 - resU / resD);
+            similarityMean += (1 - resU / (float) resD);
         }
         
-        System.out.println("EVALUATION: " + (similarityMean / finalValues.keySet().size()) + " " + state.toString());
-        return similarityMean / finalValues.keySet().size();
+        // System.out.println("EVALUATION: " + (similarityMean / (float) finalValues.keySet().size()) + " " + state.toString());
+        return similarityMean / (float) finalValues.keySet().size();
     }
     
     /**
+     * EVALUATION FONCTION in [0, 1].
+     * Shortcut for the state evaluation fonction.
      * 
      * @param hSite
-     * @return 
+     * @return The "quality" of the hunting site.
      */
     public float f(HuntingSite hSite) {
         return this.f(hSite.getSite());
@@ -184,5 +194,19 @@ public class AntColony {
 
     public State getNest() {
         return nest;
+    }
+    
+    public State getBestSolution() {
+        State bestState = null;
+        float bestScore = Float.MAX_VALUE;
+        
+        for (Ant a : ants) {
+            if (a.getBestSolution().getScore() < bestScore) {
+                bestScore = a.getBestSolution().getScore();
+                bestState = a.getBestSolution().getState();
+            }
+        }
+        
+        return bestState;
     }
 }

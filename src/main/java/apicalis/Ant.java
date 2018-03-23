@@ -2,6 +2,7 @@ package apicalis;
 
 import de.prob.statespace.State;
 import de.prob.statespace.Trace;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -51,6 +52,11 @@ public class Ant {
      */
     private int amplitude;
     
+    /**
+     * Current best solution.
+     */
+    private PartialSolution bestSolution;
+    
     
     /**
      * CONSTRUCTOR. Initialize an ant.
@@ -66,9 +72,11 @@ public class Ant {
         this.amplitude = 5; // TODO
         this.memorySize = memorySize;
         
-        this.sites = Arrays.asList(new HuntingSite[memorySize]); // Immutable
+        this.sites = new ArrayList<>(Arrays.asList(new HuntingSite[memorySize]));
         this.currentSize = 0;
         this.previousSite = null;   // Nothing explored at the beginning
+        
+        this.bestSolution = null;
         
         // We keep a reference of the colony
         // so it's easier to get the current position of the nest.
@@ -99,9 +107,15 @@ public class Ant {
             State exploreSite = AntColony.opExplo(hSite.getSite(), amplitude);
             
             // Evaluation
-            if (colony.f(exploreSite) < colony.f(hSite)) {
+            float exploreEval = colony.f(exploreSite);
+            float currentEval = colony.f(hSite);
+            
+            if (exploreEval < currentEval) {
                 hSite.setSite(exploreSite);
                 hSite.resetFails();
+                
+                this.bestSolution = new PartialSolution(exploreSite, exploreEval);
+                System.out.println(">> " + this.hashCode() + " " + bestSolution.getScore() + " " + bestSolution.getState().getStateRep());
             } else {
                 hSite.addFail();
                 
@@ -112,8 +126,6 @@ public class Ant {
                 }
             }
         }
-        
-        throw new UnsupportedOperationException("TODO: Ant@search/EVALUATION");    
     }
     
     /**
@@ -135,5 +147,22 @@ public class Ant {
      */
     private HuntingSite getRandomSite() {
         return sites.get((new Random()).nextInt(sites.size()));
+    }
+    
+    /**
+     * Empty the memory of the ant (when the nest moves).
+     */
+    public void emptyMemory() {
+        this.sites = new ArrayList<>(Arrays.asList(new HuntingSite[memorySize]));
+        this.currentSize = 0;
+        this.previousSite = null;
+    }
+
+    /**
+     * Get the best solution found by this ant (: best local solution).
+     * @return The best local solution
+     */
+    public PartialSolution getBestSolution() {
+        return bestSolution;
     }
 }
