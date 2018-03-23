@@ -44,7 +44,7 @@ public class Test_ProB {
      */
     protected static void testProB(Api api) throws IOException, ModelTranslationError {
         // Load the state space
-        StateSpace sspace = api.b_load("machines/scheduler.mch");
+        StateSpace sspace = api.b_load("machines/rbac/RBAC_Model.mch");
         
         // There's a one-to-one relationship between the StateSpace and the
         // model, so we can get the model from the StaceSpace
@@ -56,34 +56,34 @@ public class Test_ProB {
         }
         
         // Racine du model-checker
-        Transition firstTransition = sspace.getRoot().getOutTransitions(true).get(0);
-        State destination = firstTransition.getDestination();
-        
-        destination.explore();
-
-        System.out.println("---");        
-        System.out.println(sspace.printOps(sspace.getRoot()));
-        System.out.println(sspace.printState(sspace.getRoot()));
+//        Transition firstTransition = sspace.getRoot().getOutTransitions(true).get(0);
+//        State destination = firstTransition.getDestination();
+//        
+//        destination.explore();
+//
+//        System.out.println("---");        
+//        System.out.println(sspace.printOps(sspace.getRoot()));
+//        System.out.println(sspace.printState(sspace.getRoot()));
+//        
+//        System.out.println("---");
+//        System.out.println(sspace.printOps(destination));
+//        System.out.println(sspace.printState(destination));
+//        
+//        Transition secondTransition = destination.getOutTransitions(true).get(0);
+//        State destination2 = secondTransition.getDestination();
         
         System.out.println("---");
-        System.out.println(sspace.printOps(destination));
-        System.out.println(sspace.printState(destination));
-        
-        Transition secondTransition = destination.getOutTransitions(true).get(0);
-        State destination2 = secondTransition.getDestination();
-        
-        System.out.println("---");
-        System.out.println(sspace.printOps(destination2));
-        System.out.println(sspace.printState(destination2));
-        
-        System.out.println(destination2.getOutTransitions(true).get(0));
-        System.out.println(destination2.getValues());
+//        System.out.println(sspace.printOps(destination2));
+//        System.out.println(sspace.printState(destination2));
+//        
+//        System.out.println(destination2.getOutTransitions(true).get(0));
+//        System.out.println(destination2.getValues());
         
         System.out.println("ALEATOIRE");
-        System.out.println(sspace.getRoot().anyEvent(null).anyEvent(null).anyEvent(null).getStateRep());
+        System.out.println(sspace.getRoot().anyEvent(null).anyEvent(null).anyEvent(null).getValues());
         
         System.out.println("COMPARAISONS");
-        System.out.println(destination2.getId());
-        System.out.println(destination2.getOutTransitions());
+//        System.out.println(destination2.getId());
+//        System.out.println(destination2.getOutTransitions());
     }
 }

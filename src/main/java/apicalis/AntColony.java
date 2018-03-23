@@ -128,6 +128,32 @@ public class AntColony {
         
         throw new UnsupportedOperationException("TODO: AntColony@simulate");
     }
+    
+    /**
+     * EVALUATION FONCTION in [0; 1].
+     * Indicates the quality of an hunting site.
+     *      - 0: perfect
+     *      - 1: very bad
+     * 
+     * @param state
+     * @return The "quality" of the hunting site.
+     */
+    public float f(State state) {
+        if (state == null)
+            return 1;
+        
+        // WIP        
+        return 1;
+    }
+    
+    /**
+     * 
+     * @param hSite
+     * @return 
+     */
+    public float f(HuntingSite hSite) {
+        return this.f(hSite.getSite());
+    }
 
     public State getNest() {
         return nest;

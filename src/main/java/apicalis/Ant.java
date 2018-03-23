@@ -1,6 +1,7 @@
 package apicalis;
 
 import de.prob.statespace.State;
+import de.prob.statespace.Trace;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -98,7 +99,7 @@ public class Ant {
             State exploreSite = AntColony.opExplo(hSite.getSite(), amplitude);
             
             // Evaluation
-            if (f(exploreSite) < f(hSite)) {
+            if (colony.f(exploreSite) < colony.f(hSite)) {
                 hSite.setSite(exploreSite);
                 hSite.resetFails();
             } else {
