@@ -164,7 +164,8 @@ public class AntColony {
         if (state == null)
             return 1;
         
-        int similarityMean = 0;
+        float similarityMean = 0;
+        System.out.println("DEBUT ----------------------");
         
         // Computing Jaccard indexes for similarity between states
         for (String propertyName : finalValues.keySet()) {            
@@ -174,10 +175,12 @@ public class AntColony {
             int resU = Integer.parseInt(state.eval(partU).toString());
             int resD = Integer.parseInt(state.eval(partD).toString());
             
-            similarityMean += (1 - resU / (float) resD);
+            System.out.println(resU / (float) resD);
+            similarityMean += (1 - (resU / (float) resD));
         }
         
-        // System.out.println("EVALUATION: " + (similarityMean / (float) finalValues.keySet().size()) + " " + state.toString());
+        System.out.println("FIN ----------------------");
+        System.out.println("EVALUATION: " + similarityMean + " " + finalValues.keySet().size() + " " + (similarityMean / (float) finalValues.keySet().size()) + " " + state.toString());
         return similarityMean / (float) finalValues.keySet().size();
     }
     
