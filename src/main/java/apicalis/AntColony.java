@@ -156,15 +156,21 @@ public class AntColony {
         if (state == null)
             return 1;
         
-        // Set of variables and relations
-        Set<Entry<IEvalElement, AbstractEvalResult>> values;
-        values = state.getValues().entrySet();
-
-        for (Entry<IEvalElement, AbstractEvalResult> entry : values) {
-            System.out.println(entry.getKey().getCode() + " <-> " + entry.getValue());
+        int similarityMean = 0;
+        
+        // Computing Jaccard indexes for similarity between states
+        for (String propertyName : finalValues.keySet()) {
+            String partU = "card(" + propertyName + " /\\ " + finalValues.get(propertyName) + ")";
+            String partD = "card(" + propertyName + " \\/ " + finalValues.get(propertyName) + ")";
+            
+            int resU = Integer.parseInt(state.eval(partU).toString());
+            int resD = Integer.parseInt(state.eval(partD).toString());
+            
+            similarityMean += (1 - resU / resD);
         }
         
-        return 1;
+        System.out.println("EVALUATION: " + (similarityMean / finalValues.keySet().size()) + " " + state.toString());
+        return similarityMean / finalValues.keySet().size();
     }
     
     /**
