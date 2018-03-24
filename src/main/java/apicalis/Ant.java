@@ -89,6 +89,7 @@ public class Ant {
     public void search() {
         // First, find new hunting sites if needed.
         if (currentSize < memorySize) {
+            System.out.println("Ajout d'un site près du nid !");
             State huntingState = AntColony.opExplo(colony.getNest(), amplitude);
             HuntingSite huntingSite = new HuntingSite(huntingState);
             

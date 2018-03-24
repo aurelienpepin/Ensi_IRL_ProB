@@ -131,14 +131,14 @@ public class AntColony {
      */
     public void simulate() {
         // The initial site of the nest is the root of the state space.
-        int T = 0;
+        int T = 1;
         
         while (T < 1000) {
             // Local behaviour of ants
             for (Ant a : ants) a.search();
             
             // If the nest should be moved
-            if (T == GLOBAL_PATIENCE) {
+            if (T % GLOBAL_PATIENCE == 0) {
                 this.nest = this.getBestSolution();
                 System.out.println(">> Mouvement du nid: ");
                 System.out.println(">> - Account: " + this.nest.eval("Account"));
@@ -209,6 +209,8 @@ public class AntColony {
             if (a.getBestSolution().getScore() < bestScore) {
                 bestScore = a.getBestSolution().getScore();
                 bestState = a.getBestSolution().getState();
+                
+                this.bestSolution = a.getBestSolution();
             }
         }
         
