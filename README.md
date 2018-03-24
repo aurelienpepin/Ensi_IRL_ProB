@@ -9,6 +9,12 @@ This project is part of the course unit *Introduction to research*.
 # TODO
 ```
 
+## Improvements
+- [ ] Try different evaluation fonctions ;
+- [ ] Improve the exploration heuristic ;
+- [ ] Allow the ant to go back ;
+- [ ] Vary input parameters for tests ;
+
 ## Online sources
 - https://tel.archives-ouvertes.fr/tel-00005186/document
 - https://ensiwiki.ensimag.fr/images/7/71/Rapport_irl_dadoua.pdf
