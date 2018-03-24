@@ -50,7 +50,7 @@ public class Ant_ProB {
         finalValues.put("Account", "{cpt1,cpt2,cpt3}");
         finalValues.put("AccountOwner", "{(cpt1|->Bob),(cpt2|->Bob),(cpt3|->Paul)}");
         
-        AntColony colony = new AntColony(4, sspace.getRoot(), finalValues);
+        AntColony colony = new AntColony(1, sspace.getRoot(), finalValues);
         colony.simulate();
     }
 }

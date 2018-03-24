@@ -72,7 +72,7 @@ public class Ant {
         this.amplitude = 5; // TODO
         this.memorySize = memorySize;
         
-        this.sites = new ArrayList<>(Arrays.asList(new HuntingSite[memorySize]));
+        this.sites = new ArrayList<>(memorySize);
         this.currentSize = 0;
         this.previousSite = null;   // Nothing explored at the beginning
         
@@ -92,7 +92,9 @@ public class Ant {
             State huntingState = AntColony.opExplo(colony.getNest(), amplitude);
             HuntingSite huntingSite = new HuntingSite(huntingState);
             
-            this.sites.set(currentSize, huntingSite);
+            System.err.println("////////// REMPLISSAGE");
+            // this.sites.set(currentSize, huntingSite);
+            this.sites.add(huntingSite);
             currentSize++;
         } else {
             HuntingSite hSite = this.getPreviousSite();
@@ -115,7 +117,6 @@ public class Ant {
                 hSite.resetFails();
                 
                 this.bestSolution = new PartialSolution(exploreSite, exploreEval);
-                System.out.println(">> " + this.hashCode() + " " + bestSolution.getScore() + " " + bestSolution.getState().getStateRep());
             } else {
                 hSite.addFail();
                 
@@ -146,14 +147,16 @@ public class Ant {
      * @return  The chosen random site.
      */
     private HuntingSite getRandomSite() {
-        return sites.get((new Random()).nextInt(sites.size()));
+        int idxRandom = (new Random()).nextInt(sites.size());
+        System.err.println(idxRandom + " " + this.sites);
+        return sites.get(idxRandom);
     }
     
     /**
      * Empty the memory of the ant (when the nest moves).
      */
     public void emptyMemory() {
-        this.sites = new ArrayList<>(Arrays.asList(new HuntingSite[memorySize]));
+        this.sites = new ArrayList<>(memorySize);
         this.currentSize = 0;
         this.previousSite = null;
     }

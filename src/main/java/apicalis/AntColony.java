@@ -175,7 +175,6 @@ public class AntColony {
             int resU = Integer.parseInt(state.eval(partU).toString());
             int resD = Integer.parseInt(state.eval(partD).toString());
             
-            System.out.println(resU / (float) resD);
             similarityMean += (1 - (resU / (float) resD));
         }
         

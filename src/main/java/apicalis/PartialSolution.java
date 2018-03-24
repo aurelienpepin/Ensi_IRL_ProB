@@ -1,5 +1,6 @@
 package apicalis;
 
+import de.prob.animator.domainobjects.AbstractEvalResult;
 import de.prob.statespace.State;
 
 /**
@@ -35,5 +36,9 @@ public class PartialSolution implements Comparable {
 
     public float getScore() {
         return score;
+    }
+    
+    public AbstractEvalResult getProperty(String name) {
+        return state.eval(name);
     }
 }

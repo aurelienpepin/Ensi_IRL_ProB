@@ -17,3 +17,6 @@ examples/tools/nbactions\.xml
 
 # LOG files
 prob_log.txt
+*.log
+*.dot
+*.prob
