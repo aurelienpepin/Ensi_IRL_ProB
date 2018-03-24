@@ -64,12 +64,12 @@ public class Ant {
      * @param memorySize    p
      * @param colony        Colony (nest, etc.)
      */
-    public Ant(int patience, int memorySize, AntColony colony) { 
+    public Ant(int patience, int amplitude, int memorySize, AntColony colony) { 
         if (patience < 1 || memorySize < 1 || colony == null)
             throw new IllegalArgumentException("No negative parameters for an ant.");
         
         this.patience = patience;
-        this.amplitude = 5; // TODO
+        this.amplitude = amplitude;
         this.memorySize = memorySize;
         
         this.sites = new ArrayList<>(memorySize);
@@ -92,8 +92,6 @@ public class Ant {
             State huntingState = AntColony.opExplo(colony.getNest(), amplitude);
             HuntingSite huntingSite = new HuntingSite(huntingState);
             
-            System.err.println("////////// REMPLISSAGE");
-            // this.sites.set(currentSize, huntingSite);
             this.sites.add(huntingSite);
             currentSize++;
         } else {
@@ -113,11 +111,13 @@ public class Ant {
             float currentEval = colony.f(hSite);
             
             if (exploreEval < currentEval) {
+                System.out.println("Progression !");
                 hSite.setSite(exploreSite);
                 hSite.resetFails();
                 
                 this.bestSolution = new PartialSolution(exploreSite, exploreEval);
             } else {
+                System.out.println("Abandon d'un site...");
                 hSite.addFail();
                 
                 // The local patience was overtaken
@@ -147,9 +147,7 @@ public class Ant {
      * @return  The chosen random site.
      */
     private HuntingSite getRandomSite() {
-        int idxRandom = (new Random()).nextInt(sites.size());
-        System.err.println(idxRandom + " " + this.sites);
-        return sites.get(idxRandom);
+        return sites.get((new Random()).nextInt(sites.size()));
     }
     
     /**

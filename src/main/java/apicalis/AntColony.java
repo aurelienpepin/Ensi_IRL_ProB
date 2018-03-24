@@ -50,8 +50,9 @@ public class AntColony {
     /**
      * Constants for ants parameters.
      */
-    private final int LOCAL_PATIENCE = 5;
-    private final int ANT_MEMORY = 5;
+    private final int LOCAL_PATIENCE = 10;
+    private final int LOCAL_AMPLITUDE = 4;
+    private final int ANT_MEMORY = 2;
     
     // From the thesis (p. 128)
     private final int GLOBAL_PATIENCE = 2 * (LOCAL_PATIENCE + 1) * ANT_MEMORY;
@@ -81,7 +82,7 @@ public class AntColony {
             throw new IllegalArgumentException("Bad number of ants");
         
         for (int i = 0; i < n; i++) {
-            this.ants.add(new Ant(LOCAL_PATIENCE, ANT_MEMORY, this));
+            this.ants.add(new Ant(LOCAL_PATIENCE, LOCAL_AMPLITUDE, ANT_MEMORY, this));
         }
     }
     
@@ -139,6 +140,10 @@ public class AntColony {
             // If the nest should be moved
             if (T == GLOBAL_PATIENCE) {
                 this.nest = this.getBestSolution();
+                System.out.println(">> Mouvement du nid: ");
+                System.out.println(">> - Account: " + this.nest.eval("Account"));
+                System.out.println(">> - Customer: " + this.nest.eval("Customer"));
+                System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
                 
                 for (Ant a : ants)
                     a.emptyMemory();
@@ -165,7 +170,6 @@ public class AntColony {
             return 1;
         
         float similarityMean = 0;
-        System.out.println("DEBUT ----------------------");
         
         // Computing Jaccard indexes for similarity between states
         for (String propertyName : finalValues.keySet()) {            
@@ -178,8 +182,7 @@ public class AntColony {
             similarityMean += (1 - (resU / (float) resD));
         }
         
-        System.out.println("FIN ----------------------");
-        System.out.println("EVALUATION: " + similarityMean + " " + finalValues.keySet().size() + " " + (similarityMean / (float) finalValues.keySet().size()) + " " + state.toString());
+        System.out.println("EVALUATION: " + (similarityMean / (float) finalValues.keySet().size()));
         return similarityMean / (float) finalValues.keySet().size();
     }
     
