@@ -83,10 +83,12 @@ public class Test_ProB {
 //        
 //        System.out.println(destination2.getOutTransitions(true).get(0));
 //        System.out.println(destination2.getValues());
+        System.out.println(sspace.getRoot().getOutTransitions());
+        System.out.println(sspace.getRoot().anyEvent(null).getOutTransitions());
         
-        State debut = sspace.getRoot().anyEvent(null);
-        State bobConnecte = debut.perform("Connect", "user=Bob", "roleSet={AccountManager}");
-        System.out.println(bobConnecte.eval("card(Account /\\ {cpt1})"));
+//        State debut = sspace.getRoot().anyEvent(null);
+//        State bobConnecte = debut.perform("Connect", "user=Bob", "roleSet={AccountManager}");
+//        System.out.println(bobConnecte.eval("card(Account /\\ {cpt1})"));
 
 //        System.out.println("ALEATOIRE");
 //        Map<IEvalElement, AbstractEvalResult> values = sspace.getRoot().anyEvent(null).anyEvent(null).anyEvent(null).getValues();

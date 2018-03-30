@@ -1,7 +1,7 @@
 package apicalis;
 
+import apicalis.paths.PathFromRoot;
 import apicalis.solutions.PartialSolution;
-import apicalis.solutions.StateAndTransition;
 import de.prob.animator.domainobjects.AbstractEvalResult;
 import de.prob.animator.domainobjects.IEvalElement;
 import de.prob.statespace.State;
@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import javax.naming.OperationNotSupportedException;
 
 /**
  * Modelling of the colony of Pachycondyla Apicalis.
@@ -111,7 +112,7 @@ public class AntColony {
      * @param amplitude Maximum number of followed transitions. 
      * @return  A new point in the neighborhood of s.
      */
-    public static StateAndTransition opExplo(State s, int amplitude) {
+    public State opExplo(State s, int amplitude) {
         if (s == null || amplitude < 1)
             return null;
         
@@ -119,30 +120,31 @@ public class AntColony {
         ThreadLocalRandom rand = ThreadLocalRandom.current();
         int toFollow = rand.nextInt(amplitude);
         
-        StateAndTransition randDestination = randomStateFrom(s, rand);
+        State randState = randomStateFrom(s, rand);
         
         // TODO. Check NULL values
         while (toFollow > 0) {
-            randDestination = randomStateFrom(randDestination.getState(), rand);
+            randState = randomStateFrom(randState, rand);
             toFollow--;
         }
         
-        return randDestination;
+        return randState;
     }
     
-    private static StateAndTransition randomStateFrom(State s, ThreadLocalRandom rand) {
+    private State randomStateFrom(State s, ThreadLocalRandom rand) {
         List<Transition> transitions = s.getOutTransitions();
         State randState = null;
-        Transition randTransition = null;
+        Transition randTransition;
         
         if (transitions.size() > 0) {
             int randIndex = rand.nextInt(transitions.size());
-            
             randTransition = transitions.get(randIndex);
             randState = randTransition.getDestination();
+            
+            this.fillOrigins(randState, randTransition);
         }
         
-        return new StateAndTransition(randState, randTransition);
+        return randState;
     }
     
     
@@ -154,7 +156,7 @@ public class AntColony {
         // The initial site of the nest is the root of the state space.
         int T = 1;
         
-        while (T < 1000) {
+        while (T < 100) {
             // Local behaviour of ants
             for (Ant a : ants) a.search();
             
@@ -166,8 +168,8 @@ public class AntColony {
                 System.out.println(">> - Account: " + this.nest.eval("Account"));
                 System.out.println(">> - Customer: " + this.nest.eval("Customer"));
                 System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
-                System.out.println(">>> FROM: " + this.origins.get(this.nest).getName());
-                
+                System.out.println(">>> FROM: " + (new PathFromRoot(nest, origins)).getTransitions());
+
                 for (Ant a : ants)
                     a.emptyMemory();
             }
@@ -252,7 +254,7 @@ public class AntColony {
      * @param transition 
      */
     public void fillOrigins(State state, Transition transition) {
-        if (state == null)
+        if (this.origins.containsKey(state))
             return;
         
         this.origins.put(state, transition);
