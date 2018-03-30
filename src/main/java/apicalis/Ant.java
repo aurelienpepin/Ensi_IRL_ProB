@@ -1,6 +1,7 @@
 package apicalis;
 
 import apicalis.solutions.PartialSolution;
+import apicalis.solutions.StateAndTransition;
 import de.prob.statespace.State;
 import de.prob.statespace.Trace;
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ public class Ant {
     /**
      * CONSTRUCTOR. Initialize an ant.
      * @param patience      P_locale
+     * @param amplitude     A_locale
      * @param memorySize    p
      * @param colony        Colony (nest, etc.)
      */
@@ -91,7 +93,10 @@ public class Ant {
         // First, find new hunting sites if needed.
         if (currentSize < memorySize) {
             System.out.println("Ajout d'un site près du nid !");
-            State huntingState = AntColony.opExplo(colony.getNest(), amplitude);
+            
+            StateAndTransition huntingDest = AntColony.opExplo(colony.getNest(), amplitude);
+            State huntingState = huntingDest.getState();
+            colony.fillOrigins(huntingState, huntingDest.getTransition());
             
             HuntingSite huntingSite = new HuntingSite(huntingState);
             
@@ -107,7 +112,9 @@ public class Ant {
             /**
              * LOCAL EXPLORATION.
              */
-            State exploreSite = AntColony.opExplo(hSite.getSite(), amplitude);
+            StateAndTransition exploreDest = AntColony.opExplo(hSite.getSite(), amplitude);
+            State exploreSite = exploreDest.getState();
+            colony.fillOrigins(exploreSite, exploreDest.getTransition());
             
             // Evaluation
             float exploreEval = colony.f(exploreSite);

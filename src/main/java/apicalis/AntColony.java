@@ -1,6 +1,7 @@
 package apicalis;
 
 import apicalis.solutions.PartialSolution;
+import apicalis.solutions.StateAndTransition;
 import de.prob.animator.domainobjects.AbstractEvalResult;
 import de.prob.animator.domainobjects.IEvalElement;
 import de.prob.statespace.State;
@@ -110,7 +111,7 @@ public class AntColony {
      * @param amplitude Maximum number of followed transitions. 
      * @return  A new point in the neighborhood of s.
      */
-    public static State opExplo(State s, int amplitude) {
+    public static StateAndTransition opExplo(State s, int amplitude) {
         if (s == null || amplitude < 1)
             return null;
         
@@ -118,27 +119,30 @@ public class AntColony {
         ThreadLocalRandom rand = ThreadLocalRandom.current();
         int toFollow = rand.nextInt(amplitude);
         
-        State randState = randomStateFrom(s, rand);
+        StateAndTransition randDestination = randomStateFrom(s, rand);
         
         // TODO. Check NULL values
         while (toFollow > 0) {
-            randState = randomStateFrom(randState, rand);
+            randDestination = randomStateFrom(randDestination.getState(), rand);
             toFollow--;
         }
         
-        return randState;
+        return randDestination;
     }
     
-    private static State randomStateFrom(State s, ThreadLocalRandom rand) {
+    private static StateAndTransition randomStateFrom(State s, ThreadLocalRandom rand) {
         List<Transition> transitions = s.getOutTransitions();
         State randState = null;
+        Transition randTransition = null;
         
         if (transitions.size() > 0) {
             int randIndex = rand.nextInt(transitions.size());
-            randState = transitions.get(randIndex).getDestination();
+            
+            randTransition = transitions.get(randIndex);
+            randState = randTransition.getDestination();
         }
         
-        return randState;
+        return new StateAndTransition(randState, randTransition);
     }
     
     
@@ -157,10 +161,12 @@ public class AntColony {
             // TODO. If the nest should be moved
             if (T % GLOBAL_PATIENCE == 0) {
                 this.nest = this.getBestSolution();
+                
                 System.out.println(">> Mouvement du nid: " + this.bestSolution.getScore());
                 System.out.println(">> - Account: " + this.nest.eval("Account"));
                 System.out.println(">> - Customer: " + this.nest.eval("Customer"));
                 System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
+                System.out.println(">>> FROM: " + this.origins.get(this.nest).getName());
                 
                 for (Ant a : ants)
                     a.emptyMemory();
