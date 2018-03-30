@@ -168,7 +168,7 @@ public class AntColony {
                 System.out.println(">> - Account: " + this.nest.eval("Account"));
                 System.out.println(">> - Customer: " + this.nest.eval("Customer"));
                 System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
-                System.out.println(">>> FROM: " + (new PathFromRoot(nest, origins)).getTransitions());
+                System.out.println(">>> FROM: " + (new PathFromRoot(nest, origins)).toString());
 
                 for (Ant a : ants)
                     a.emptyMemory();
