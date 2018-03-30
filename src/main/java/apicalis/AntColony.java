@@ -1,10 +1,12 @@
 package apicalis;
 
+import apicalis.solutions.PartialSolution;
 import de.prob.animator.domainobjects.AbstractEvalResult;
 import de.prob.animator.domainobjects.IEvalElement;
 import de.prob.statespace.State;
 import de.prob.statespace.Transition;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -48,6 +50,17 @@ public class AntColony {
     private final Map<String, String> finalValues;
     
     /**
+     * Associates a state with its coming transition.
+     * Useful to build a trace of states.
+     * 
+     * Example. Root --T--> State1 is stored
+     * in the map with the following entries:
+     *      - (Root, null)
+     *      - (State1, T)
+     */
+    private Map<State, Transition> origins;
+    
+    /**
      * Constants for ants parameters.
      */
     private final int LOCAL_PATIENCE = 10;
@@ -71,6 +84,10 @@ public class AntColony {
         this.createAnts(n);
         
         this.finalValues = finalValues;
+        
+        // Origin parameters
+        this.origins = new HashMap<>();
+        this.origins.put(root, null);
     }
     
     /**
@@ -137,10 +154,10 @@ public class AntColony {
             // Local behaviour of ants
             for (Ant a : ants) a.search();
             
-            // If the nest should be moved
+            // TODO. If the nest should be moved
             if (T % GLOBAL_PATIENCE == 0) {
                 this.nest = this.getBestSolution();
-                System.out.println(">> Mouvement du nid: ");
+                System.out.println(">> Mouvement du nid: " + this.bestSolution.getScore());
                 System.out.println(">> - Account: " + this.nest.eval("Account"));
                 System.out.println(">> - Customer: " + this.nest.eval("Customer"));
                 System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
@@ -201,6 +218,10 @@ public class AntColony {
         return nest;
     }
     
+    /**
+     * Get the best (global) solution among ants' best (local) solutions.
+     * @return The state associated with the best evaluation score.
+     */
     public State getBestSolution() {
         State bestState = null;
         float bestScore = Float.MAX_VALUE;
@@ -215,5 +236,19 @@ public class AntColony {
         }
         
         return bestState;
+    }
+    
+    /**
+     * Associate a transition with its end state.
+     * Useful to build a full path from the root to a state.
+     * 
+     * @param state
+     * @param transition 
+     */
+    public void fillOrigins(State state, Transition transition) {
+        if (state == null)
+            return;
+        
+        this.origins.put(state, transition);
     }
 }

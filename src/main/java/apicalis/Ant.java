@@ -1,5 +1,6 @@
 package apicalis;
 
+import apicalis.solutions.PartialSolution;
 import de.prob.statespace.State;
 import de.prob.statespace.Trace;
 import java.util.ArrayList;
@@ -91,6 +92,7 @@ public class Ant {
         if (currentSize < memorySize) {
             System.out.println("Ajout d'un site près du nid !");
             State huntingState = AntColony.opExplo(colony.getNest(), amplitude);
+            
             HuntingSite huntingSite = new HuntingSite(huntingState);
             
             this.sites.add(huntingSite);

@@ -1,4 +1,4 @@
-package apicalis;
+package apicalis.solutions;
 
 import de.prob.animator.domainobjects.AbstractEvalResult;
 import de.prob.statespace.State;
