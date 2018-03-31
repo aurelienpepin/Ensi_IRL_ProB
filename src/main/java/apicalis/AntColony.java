@@ -8,6 +8,7 @@ import de.prob.statespace.State;
 import de.prob.statespace.Transition;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -60,7 +61,14 @@ public class AntColony {
      *      - (Root, null)
      *      - (State1, T)
      */
-    private Map<State, Transition> origins;
+    private final Map<State, Transition> origins;
+    
+    /**
+     * Keeps a set of states in which it is forbidden to move back.
+     * These states are the root and all states accessibles
+     * in one transition from the root, as they "uninitialize" the B machine.
+     */
+    private final Set<State> forbiddenReturns;
     
     /**
      * Constants for ants parameters.
@@ -72,6 +80,8 @@ public class AntColony {
     // From the thesis (p. 128)
     private final int GLOBAL_PATIENCE = 2 * (LOCAL_PATIENCE + 1) * ANT_MEMORY;
     private final int GLOBAL_AMPLITUDE = 15;
+    
+    private final boolean ANT_BACK = true;
     
     
     /**
@@ -90,6 +100,9 @@ public class AntColony {
         // Origin parameters
         this.origins = new HashMap<>();
         this.origins.put(root, null);
+        
+        this.forbiddenReturns = new HashSet<>();
+        this.initForbiddenReturns(root);
     }
     
     /**
@@ -137,11 +150,17 @@ public class AntColony {
         Transition randTransition;
         
         if (transitions.size() > 0) {
-            int randIndex = rand.nextInt(transitions.size());
-            randTransition = transitions.get(randIndex);
-            randState = randTransition.getDestination();
+            int randIndex = rand.nextInt(transitions.size() + (ANT_BACK ? 1 : 0));
             
-            this.fillOrigins(randState, randTransition);
+            if (randIndex < transitions.size() || forbiddenReturns.contains(s)) {
+                randTransition = transitions.get(Math.min(randIndex, transitions.size() - 1));
+                randState = randTransition.getDestination();
+
+                this.fillOrigins(randState, randTransition);
+            } else {
+                randTransition = this.origins.get(s);
+                randState = randTransition.getSource();
+            }
         }
         
         return randState;
@@ -258,5 +277,17 @@ public class AntColony {
             return;
         
         this.origins.put(state, transition);
+    }
+    
+    /**
+     * Gathers states from which it is impossible to move back in a set.
+     * @param root Root of the statespace
+     */
+    private void initForbiddenReturns(State root) {
+        this.forbiddenReturns.add(root);
+        
+        for (Transition t : root.getOutTransitions()) {
+            this.forbiddenReturns.add(t.getDestination());
+        }
     }
 }
