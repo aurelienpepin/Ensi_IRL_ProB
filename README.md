@@ -12,7 +12,7 @@ This project is part of the course unit *Introduction to research*.
 ## Improvements
 - [ ] Try different evaluation fonctions ;
 - [ ] Improve the exploration heuristic ;
-- [ ] Allow the ant to go back ;
+- [x] Allow the ant to go back ;
 - [ ] Vary input parameters for tests ;
 
 ## Online sources

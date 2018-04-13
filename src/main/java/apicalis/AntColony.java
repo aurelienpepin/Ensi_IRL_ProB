@@ -175,7 +175,7 @@ public class AntColony {
         // The initial site of the nest is the root of the state space.
         int T = 1;
         
-        while (T < 100) {
+        while (T < 1000) {
             // Local behaviour of ants
             for (Ant a : ants) a.search();
             
@@ -196,7 +196,6 @@ public class AntColony {
             T++;
         }
         
-        // WIP: I should give the trace as a solution, not the only final state.
         System.out.println("End of the algorithm. Best solution: " + this.bestSolution.getScore());
     }
     
