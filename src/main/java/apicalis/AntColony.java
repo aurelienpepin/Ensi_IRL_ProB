@@ -3,8 +3,6 @@ package apicalis;
 import apicalis.paths.PathFromRoot;
 import apicalis.solutions.PartialSolution;
 import apicalis.variables.Variable;
-import de.prob.animator.domainobjects.AbstractEvalResult;
-import de.prob.animator.domainobjects.IEvalElement;
 import de.prob.statespace.State;
 import de.prob.statespace.Transition;
 import java.util.ArrayList;
@@ -12,10 +10,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.naming.OperationNotSupportedException;
 
 /**
  * Modelling of the colony of Pachycondyla Apicalis.
@@ -74,7 +70,7 @@ public class AntColony {
     /**
      * Constants for ants parameters.
      */
-    private final int LOCAL_PATIENCE = 5;
+    private final int LOCAL_PATIENCE = 8;
     private final int LOCAL_AMPLITUDE = 4;
     private final int ANT_MEMORY = 2;
     
@@ -87,6 +83,11 @@ public class AntColony {
     
     // True if variables can have different weights
     private final boolean WEIGHTING = true;
+    
+    /**
+     * Performance measurement.
+     */
+    public static long numberOfEvaluations = 0;
     
     
     /**
@@ -213,37 +214,9 @@ public class AntColony {
      * @param state
      * @return The "quality" of the hunting site.
      */
-//    public float f(State state) {
-//        if (state == null)
-//            return 1;
-//        
-//        float similarityMean = 0;
-//        
-//        // Computing Jaccard indexes for similarity between states
-//        for (String propertyName : finalValues.keySet()) {            
-//            String partU = "card(" + propertyName + " /\\ " + finalValues.get(propertyName) + ")";
-//            String partD = "card(" + propertyName + " \\/ " + finalValues.get(propertyName) + ")";
-//            
-//            int resU = Integer.parseInt(state.eval(partU).toString());
-//            int resD = Integer.parseInt(state.eval(partD).toString());
-//            
-//            similarityMean += (1 - (resU / (float) resD));
-//        }
-//        
-//        System.out.println("EVALUATION: " + (similarityMean / (float) finalValues.keySet().size()));
-//        return similarityMean / (float) finalValues.keySet().size();
-//    }
-    
-    /**
-     * EVALUATION FONCTION in [0, 1].
-     * Indicates the quality of an hunting site.
-     *      - 0: perfect
-     *      - 1: very bad
-     * 
-     * @param state
-     * @return The "quality" of the hunting site.
-     */
     public float f(State state) {
+        numberOfEvaluations++;
+        
         if (state == null)
             return 1;
         
@@ -258,7 +231,7 @@ public class AntColony {
         
         float result = (sumOfWeights == 0) ? 1 : (similarityMean / sumOfWeights);
         
-        System.out.println("EVALUATION: " + result);
+        System.out.println(numberOfEvaluations + ". EVALUATION: " + result);
         return result;
     }
     

@@ -54,7 +54,7 @@ public class Ant_ProB {
         variables.add(new SetVariable("Account", "{cpt1,cpt2,cpt3}"));
         variables.add(new SetVariable("AccountOwner", "{(cpt1|->Bob),(cpt2|->Bob),(cpt3|->Paul)}"));
         
-        AntColony colony = new AntColony(3, sspace.getRoot(), variables);
+        AntColony colony = new AntColony(1, sspace.getRoot(), variables);
         colony.simulate();
     }
 }
