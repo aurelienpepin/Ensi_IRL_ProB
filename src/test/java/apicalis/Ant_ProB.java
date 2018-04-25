@@ -1,5 +1,7 @@
 package apicalis;
 
+import apicalis.variables.SetVariable;
+import apicalis.variables.Variable;
 import de.prob.Main;
 import de.prob.model.classicalb.ClassicalBMachine;
 import de.prob.model.classicalb.ClassicalBModel;
@@ -7,7 +9,9 @@ import de.prob.scripting.Api;
 import de.prob.scripting.ModelTranslationError;
 import de.prob.statespace.StateSpace;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,13 +48,13 @@ public class Ant_ProB {
         
         /**
          * APICALIS ALGORITHM.
-         */
-        Map<String, String> finalValues = new HashMap<>();
-        finalValues.put("Customer", "{Bob,Paul}");
-        finalValues.put("Account", "{cpt1,cpt2,cpt3}");
-        finalValues.put("AccountOwner", "{(cpt1|->Bob),(cpt2|->Bob),(cpt3|->Paul)}");
+         */        
+        List<Variable> variables = new ArrayList<>();
+        variables.add(new SetVariable("Customer", "{Bob,Paul}"));
+        variables.add(new SetVariable("Account", "{cpt1,cpt2,cpt3}"));
+        variables.add(new SetVariable("AccountOwner", "{(cpt1|->Bob),(cpt2|->Bob),(cpt3|->Paul)}"));
         
-        AntColony colony = new AntColony(3, sspace.getRoot(), finalValues);
+        AntColony colony = new AntColony(3, sspace.getRoot(), variables);
         colony.simulate();
     }
 }
