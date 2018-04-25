@@ -2,8 +2,7 @@ package apicalis;
 
 import apicalis.paths.PathFromRoot;
 import apicalis.solutions.PartialSolution;
-import de.prob.animator.domainobjects.AbstractEvalResult;
-import de.prob.animator.domainobjects.IEvalElement;
+import apicalis.variables.Variable;
 import de.prob.statespace.State;
 import de.prob.statespace.Transition;
 import java.util.ArrayList;
@@ -11,10 +10,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.naming.OperationNotSupportedException;
 
 /**
  * Modelling of the colony of Pachycondyla Apicalis.
@@ -50,7 +47,7 @@ public class AntColony {
      * Final searched values.
      * Should be valid according to the B syntax.
      */
-    private final Map<String, String> finalValues;
+    private final List<Variable> finalValues;
     
     /**
      * Associates a state with its coming transition.
@@ -73,7 +70,7 @@ public class AntColony {
     /**
      * Constants for ants parameters.
      */
-    private final int LOCAL_PATIENCE = 10;
+    private final int LOCAL_PATIENCE = 8;
     private final int LOCAL_AMPLITUDE = 4;
     private final int ANT_MEMORY = 2;
     
@@ -81,7 +78,16 @@ public class AntColony {
     private final int GLOBAL_PATIENCE = 2 * (LOCAL_PATIENCE + 1) * ANT_MEMORY;
     private final int GLOBAL_AMPLITUDE = 15;
     
+    // True if ants are allowed to move back
     private final boolean ANT_BACK = true;
+    
+    // True if variables can have different weights
+    private final boolean WEIGHTING = true;
+    
+    /**
+     * Performance measurement.
+     */
+    public static long numberOfEvaluations = 0;
     
     
     /**
@@ -90,7 +96,7 @@ public class AntColony {
      * @param root  Root of the state space, initial position of the nest
      * @param finalValues  Set of state values (variables, relations) in B.
      */
-    public AntColony(int n, State root, Map<String, String> finalValues) {
+    public AntColony(int n, State root, List<Variable> finalValues) {
         this.nest = root;
         this.ants = new ArrayList<>();
         this.createAnts(n);
@@ -209,24 +215,24 @@ public class AntColony {
      * @return The "quality" of the hunting site.
      */
     public float f(State state) {
+        numberOfEvaluations++;
+        
         if (state == null)
             return 1;
         
         float similarityMean = 0;
+        float sumOfWeights = 0;
         
-        // Computing Jaccard indexes for similarity between states
-        for (String propertyName : finalValues.keySet()) {            
-            String partU = "card(" + propertyName + " /\\ " + finalValues.get(propertyName) + ")";
-            String partD = "card(" + propertyName + " \\/ " + finalValues.get(propertyName) + ")";
-            
-            int resU = Integer.parseInt(state.eval(partU).toString());
-            int resD = Integer.parseInt(state.eval(partD).toString());
-            
-            similarityMean += (1 - (resU / (float) resD));
+        // Compute each similarity measure for each interesting variable
+        for (Variable var : finalValues) {
+            similarityMean += var.evaluate(state) * (WEIGHTING ? var.getWeight() : 1);
+            sumOfWeights += (WEIGHTING ? var.getWeight() : 1);
         }
         
-        System.out.println("EVALUATION: " + (similarityMean / (float) finalValues.keySet().size()));
-        return similarityMean / (float) finalValues.keySet().size();
+        float result = (sumOfWeights == 0) ? 1 : (similarityMean / sumOfWeights);
+        
+        System.out.println(numberOfEvaluations + ". EVALUATION: " + result);
+        return result;
     }
     
     /**
