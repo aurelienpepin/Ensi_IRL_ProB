@@ -70,8 +70,8 @@ public class AntColony {
     /**
      * Constants for ants parameters.
      */
-    private final int LOCAL_PATIENCE = 8;
-    private final int LOCAL_AMPLITUDE = 4;
+    private final int LOCAL_PATIENCE = 10;
+    private final int LOCAL_AMPLITUDE = 3;
     private final int ANT_MEMORY = 2;
     
     // From the thesis (p. 128)
@@ -126,6 +126,39 @@ public class AntColony {
     
     
     /**
+     * ALGORITHM. Simulate a colony of Apicalis ants.
+     * Ants are well initialized before this method call.
+     */
+    public void simulate() {
+        // The initial site of the nest is the root of the state space.
+        int T = 1;
+        
+        while (numberOfEvaluations < 500) {
+            // Local behaviour of ants
+            for (Ant a : ants) a.search();
+            
+            // TODO. If the nest should be moved
+            if (T % GLOBAL_PATIENCE == 0) {
+                this.nest = this.getBestSolution();
+                
+                System.out.println(">> Mouvement du nid: " + this.bestSolution.getScore());
+                System.out.println(">> - Account: " + this.nest.eval("Account"));
+                System.out.println(">> - Customer: " + this.nest.eval("Customer"));
+                System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
+                System.out.println(">>> FROM: " + (new PathFromRoot(nest, origins)).toString());
+
+                for (Ant a : ants)
+                    a.emptyMemory();
+            }
+            
+            T++;
+        }
+        
+        System.out.println("End of the algorithm. Best solution: " + this.bestSolution.getScore());
+    }
+    
+    
+    /**
      * OPERATOR. Neighborhood operator (O_explo).
      * @param s The first point, already visited.    
      * @param amplitude Maximum number of followed transitions. 
@@ -172,39 +205,6 @@ public class AntColony {
         return randState;
     }
     
-    
-    /**
-     * ALGORITHM. Simulate a colony of Apicalis ants.
-     * Ants are well initialized before this method call.
-     */
-    public void simulate() {
-        // The initial site of the nest is the root of the state space.
-        int T = 1;
-        
-        while (T < 1000) {
-            // Local behaviour of ants
-            for (Ant a : ants) a.search();
-            
-            // TODO. If the nest should be moved
-            if (T % GLOBAL_PATIENCE == 0) {
-                this.nest = this.getBestSolution();
-                
-                System.out.println(">> Mouvement du nid: " + this.bestSolution.getScore());
-                System.out.println(">> - Account: " + this.nest.eval("Account"));
-                System.out.println(">> - Customer: " + this.nest.eval("Customer"));
-                System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
-                System.out.println(">>> FROM: " + (new PathFromRoot(nest, origins)).toString());
-
-                for (Ant a : ants)
-                    a.emptyMemory();
-            }
-            
-            T++;
-        }
-        
-        System.out.println("End of the algorithm. Best solution: " + this.bestSolution.getScore());
-    }
-    
     /**
      * EVALUATION FONCTION in [0, 1].
      * Indicates the quality of an hunting site.
@@ -244,10 +244,6 @@ public class AntColony {
      */
     public float f(HuntingSite hSite) {
         return this.f(hSite.getSite());
-    }
-
-    public State getNest() {
-        return nest;
     }
     
     /**
@@ -294,5 +290,13 @@ public class AntColony {
         for (Transition t : root.getOutTransitions()) {
             this.forbiddenReturns.add(t.getDestination());
         }
+    }
+
+    public State getNest() {
+        return nest;
+    }
+
+    public int getSiteAmplitude() {
+        return GLOBAL_AMPLITUDE;
     }
 }

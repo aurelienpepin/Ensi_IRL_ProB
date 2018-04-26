@@ -93,7 +93,7 @@ public class Ant {
         if (currentSize < memorySize) {
             System.out.println("Ajout d'un site près du nid !");
             
-            State huntingState = colony.opExplo(colony.getNest(), amplitude);            
+            State huntingState = colony.opExplo(colony.getNest(), colony.getSiteAmplitude());            
             HuntingSite huntingSite = new HuntingSite(huntingState);
             
             this.sites.add(huntingSite);
