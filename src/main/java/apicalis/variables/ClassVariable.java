@@ -8,13 +8,13 @@ import de.prob.statespace.State;
  * 
  * @author Aurélien Pepin
  */
-public class SetVariable extends Variable {
+public class ClassVariable extends Variable {
 
-    public SetVariable(String identifier, String value) {
+    public ClassVariable(String identifier, String value) {
         super(identifier, value);
     }
 
-    public SetVariable(String identifier, String value, double weight) {
+    public ClassVariable(String identifier, String value, double weight) {
         super(identifier, value, weight);
     }
 
