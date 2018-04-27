@@ -78,7 +78,7 @@ public class Ant {
         this.currentSize = 0;
         this.previousSite = null;   // Nothing explored at the beginning
         
-        this.bestSolution = null;
+        this.bestSolution = new PartialSolution(colony.getNest(), 1);
         
         // We keep a reference of the colony
         // so it's easier to get the current position of the nest.

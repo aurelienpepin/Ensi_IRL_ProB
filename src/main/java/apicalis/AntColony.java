@@ -67,15 +67,17 @@ public class AntColony {
      */
     private final Set<State> forbiddenReturns;
     
+    private final Map<State, Float> evals;
+    
     /**
      * Constants for ants parameters.
      */
-    private final int LOCAL_PATIENCE = 10;
+    private final int LOCAL_PATIENCE = 5;
     private final int LOCAL_AMPLITUDE = 3;
-    private final int ANT_MEMORY = 2;
+    private final int ANT_MEMORY = 3;
     
     // From the thesis (p. 128)
-    private final int GLOBAL_PATIENCE = 2 * (LOCAL_PATIENCE + 1) * ANT_MEMORY;
+    private final int GLOBAL_PATIENCE = /* 2 * */ (LOCAL_PATIENCE + 1) * ANT_MEMORY;
     private final int GLOBAL_AMPLITUDE = 15;
     
     // True if ants are allowed to move back
@@ -102,6 +104,7 @@ public class AntColony {
         this.createAnts(n);
         
         this.finalValues = finalValues;
+        this.evals = new HashMap<>();
         
         // Origin parameters
         this.origins = new HashMap<>();
@@ -133,7 +136,7 @@ public class AntColony {
         // The initial site of the nest is the root of the state space.
         int T = 1;
         
-        while (numberOfEvaluations < 500) {
+        while (numberOfEvaluations < 1000 && (this.bestSolution == null || this.bestSolution.getScore() > 0)) {
             // Local behaviour of ants
             for (Ant a : ants) a.search();
             
@@ -220,19 +223,22 @@ public class AntColony {
         if (state == null)
             return 1;
         
-        float similarityMean = 0;
-        float sumOfWeights = 0;
-        
-        // Compute each similarity measure for each interesting variable
-        for (Variable var : finalValues) {
-            similarityMean += var.evaluate(state) * (WEIGHTING ? var.getWeight() : 1);
-            sumOfWeights += (WEIGHTING ? var.getWeight() : 1);
+        if (!evals.containsKey(state)) {
+            float similarityMean = 0;
+            float sumOfWeights = 0;
+
+            // Compute each similarity measure for each interesting variable
+            for (Variable var : finalValues) {
+                similarityMean += var.evaluate(state) * (WEIGHTING ? var.getWeight() : 1);
+                sumOfWeights += (WEIGHTING ? var.getWeight() : 1);
+            }
+
+            float result = (sumOfWeights == 0) ? 1 : (similarityMean / sumOfWeights);
+            evals.put(state, result);
         }
         
-        float result = (sumOfWeights == 0) ? 1 : (similarityMean / sumOfWeights);
-        
-        System.out.println(numberOfEvaluations + ". EVALUATION: " + result);
-        return result;
+        System.out.println(numberOfEvaluations + ". EVALUATION: " + evals.get(state));
+        return evals.get(state);
     }
     
     /**
@@ -253,16 +259,22 @@ public class AntColony {
     public State getBestSolution() {
         State bestState = null;
         float bestScore = Float.MAX_VALUE;
+        PartialSolution bestFromAnts = null;
         
         for (Ant a : ants) {
             if (a.getBestSolution().getScore() < bestScore) {
                 bestScore = a.getBestSolution().getScore();
                 bestState = a.getBestSolution().getState();
                 
-                this.bestSolution = a.getBestSolution();
+                bestFromAnts = a.getBestSolution();
             }
         }
         
+        if (this.bestSolution != null && this.bestSolution.getScore() < bestFromAnts.getScore()) {
+            return this.bestSolution.getState();
+        }
+        
+        this.bestSolution = bestFromAnts;
         return bestState;
     }
     
