@@ -138,7 +138,7 @@ public class AntColony {
         
         while (numberOfEvaluations < 1000 && (this.bestSolution == null || this.bestSolution.getScore() > 0)) {
             // Local behaviour of ants
-            for (Ant a : ants) a.search();
+            for (Ant a : ants) a.search();  // TODO: voir si parallélisable?
             
             // TODO. If the nest should be moved
             if (T % GLOBAL_PATIENCE == 0) {
