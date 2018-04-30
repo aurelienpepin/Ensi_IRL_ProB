@@ -1,6 +1,6 @@
 package apicalis;
 
-import apicalis.variables.SetVariable;
+import apicalis.variables.ClassVariable;
 import apicalis.variables.Variable;
 import de.prob.Main;
 import de.prob.model.classicalb.ClassicalBMachine;
@@ -50,11 +50,11 @@ public class Ant_ProB {
          * APICALIS ALGORITHM.
          */        
         List<Variable> variables = new ArrayList<>();
-        variables.add(new SetVariable("Customer", "{Bob,Paul}"));
-        variables.add(new SetVariable("Account", "{cpt1,cpt2,cpt3}"));
-        variables.add(new SetVariable("AccountOwner", "{(cpt1|->Bob),(cpt2|->Bob),(cpt3|->Paul)}"));
+        variables.add(new ClassVariable("Customer", "{Bob,Paul}"));
+        variables.add(new ClassVariable("Account", "{cpt1,cpt2,cpt3}"));
+        variables.add(new ClassVariable("AccountOwner", "{(cpt1|->Bob),(cpt2|->Bob),(cpt3|->Paul)}", 2));
         
-        AntColony colony = new AntColony(1, sspace.getRoot(), variables);
+        AntColony colony = new AntColony(4, sspace.getRoot(), variables);
         colony.simulate();
     }
 }

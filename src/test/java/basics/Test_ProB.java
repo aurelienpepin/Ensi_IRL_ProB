@@ -85,7 +85,7 @@ public class Test_ProB {
 //        System.out.println(destination2.getValues());
         System.out.println(sspace.getRoot().getOutTransitions());
         System.out.println(sspace.getRoot().anyEvent(null).getOutTransitions());
-        
+
 //        State debut = sspace.getRoot().anyEvent(null);
 //        State bobConnecte = debut.perform("Connect", "user=Bob", "roleSet={AccountManager}");
 //        System.out.println(bobConnecte.eval("card(Account /\\ {cpt1})"));
