@@ -67,7 +67,17 @@ public class AntColony {
      */
     private final Set<State> forbiddenReturns;
     
+    /**
+     * Keeps a table of evaluations (memoization).
+     * Speed up a lot the execution of the algorithm.
+     */
     private final Map<State, Float> evals;
+    
+    /**
+     * Keeps a set of explored states.
+     * Useful to measure the performance of the algorithm.
+     */
+    private final Set<State> exploredStates;
     
     /**
      * Constants for ants parameters.
@@ -90,6 +100,7 @@ public class AntColony {
      * Performance measurement.
      */
     public static long numberOfEvaluations = 0;
+    public static long numberOfStates = 0;
     
     
     /**
@@ -105,6 +116,7 @@ public class AntColony {
         
         this.finalValues = finalValues;
         this.evals = new HashMap<>();
+        this.exploredStates = new HashSet<>();
         
         // Origin parameters
         this.origins = new HashMap<>();
@@ -136,7 +148,7 @@ public class AntColony {
         // The initial site of the nest is the root of the state space.
         int T = 1;
         
-        while (numberOfEvaluations < 1000 && (this.bestSolution == null || this.bestSolution.getScore() > 0)) {
+        while (numberOfEvaluations < 500 && (this.bestSolution == null || this.bestSolution.getScore() > 0)) {
             // Local behaviour of ants
             for (Ant a : ants) a.search();  // TODO: voir si parallélisable?
             
@@ -158,6 +170,7 @@ public class AntColony {
         }
         
         System.out.println("End of the algorithm. Best solution: " + this.bestSolution.getScore());
+        System.out.println("NUMBER OF EXPLORED STATES: " + numberOfStates);
     }
     
     
@@ -219,6 +232,7 @@ public class AntColony {
      */
     public float f(State state) {
         numberOfEvaluations++;
+        markStateAsExplored(state);
         
         if (state == null)
             return 1;
@@ -304,6 +318,17 @@ public class AntColony {
         }
     }
 
+    /**
+     * Includes the state in the set of explored states and increase the counter.
+     */
+    private void markStateAsExplored(State state) {
+        if (exploredStates.contains(state))
+            return;
+        
+        numberOfStates++;
+        exploredStates.add(state);
+    }
+    
     public State getNest() {
         return nest;
     }
