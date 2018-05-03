@@ -50,11 +50,11 @@ public class Tests_ProB {
          */        
         List<Variable> variables = new ArrayList<>();
         variables.add(new ClassVariable("Customer", "{Bob,Paul}"));
-        variables.add(new ClassVariable("Account", "{cpt1,cpt2,cpt3}"));
+        // variables.add(new ClassVariable("Account", "{cpt1,cpt2,cpt3}"));
         variables.add(new ClassVariable("AccountOwner", "{(cpt1|->Bob),(cpt2|->Bob),(cpt3|->Paul)}"));
         
+        List<Integer> antsNumbers = Arrays.asList(1, 2, 3, 5, 10, 15, 20, 50);
         AntColony colony;
-        List<Integer> antsNumbers = Arrays.asList(1, 2, 3, 5, 10, 15, 20, 50, 100);
 
         for (Integer i : antsNumbers) {
             System.out.println("--------------------------------------------");
@@ -63,8 +63,5 @@ public class Tests_ProB {
             colony = new AntColony(i, sspace.getRoot(), variables);
             colony.simulate();
         }
-        
-        // AntColony colony = new AntColony(1, sspace.getRoot(), variables);
-        // colony.simulate();
     }
 }

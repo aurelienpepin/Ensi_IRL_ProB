@@ -106,8 +106,8 @@ public class AntColony {
     /**
      * Performance measurement.
      */
-    public static long numberOfEvaluations = 0;
-    public static long numberOfStates = 0;
+    public long numberOfEvaluations = 0;
+    public long numberOfStates = 0;
     
     
     /**
