@@ -90,6 +90,10 @@ public class AntColony {
     private final int GLOBAL_PATIENCE = /* 2 * */ (LOCAL_PATIENCE + 1) * ANT_MEMORY;
     private final int GLOBAL_AMPLITUDE = 15;
     
+    // The number of evaluations is >= than the number of states
+    private final int MAX_NUMBER_OF_EVALUATIONS = 500;
+    private final int MAX_NUMBER_OF_STATES = 500;
+    
     // True if ants are allowed to move back
     private final boolean ANT_BACK = true;
     
@@ -151,7 +155,7 @@ public class AntColony {
         // The initial site of the nest is the root of the state space.
         int T = 1;
         
-        while (numberOfEvaluations < 500 && (this.bestSolution == null || this.bestSolution.getScore() > 0)) {
+        while (numberOfEvaluations < MAX_NUMBER_OF_EVALUATIONS && (this.bestSolution == null || this.bestSolution.getScore() > 0)) {
             // Local behaviour of ants
             for (Ant a : ants) a.search();
             
@@ -188,7 +192,6 @@ public class AntColony {
         
         State randState = randomStateFrom(s, rand);
         
-        // TODO. Check NULL values
         while (toFollow > 0) {
             randState = randomStateFrom(randState, rand);
             toFollow--;
@@ -211,7 +214,6 @@ public class AntColony {
 
                 this.fillOrigins(randState, randTransition);
             } else {
-                System.out.println("RETOUR EN ARRIERE");
                 randTransition = this.origins.get(s);
                 randState = randTransition.getSource();
             }

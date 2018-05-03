@@ -20,43 +20,43 @@ public class Ant {
      * Local patience for the ant.
      * Should be > 0.
      */
-    private int patience;
+    protected int patience;
     
     /**
      * List of hunting sites.
      */
-    private List<HuntingSite> sites;
+    protected List<HuntingSite> sites;
     
     /**
      * Previous explored site.
      */
-    private HuntingSite previousSite;
+    protected HuntingSite previousSite;
     
     /**
      * Memory size for hunting sites.
      * Should be > 0.
      */
-    private final int memorySize;
+    protected final int memorySize;
     
     /**
      * Number of current sites.
      */
-    private int currentSize;
+    protected int currentSize;
     
     /**
      * The colony of the ants.
      */
-    private AntColony colony;
+    protected AntColony colony;
     
     /**
      * Local amplitude for the ant.
      */
-    private int amplitude;
+    protected int amplitude;
     
     /**
      * Current best solution.
      */
-    private PartialSolution bestSolution;
+    protected PartialSolution bestSolution;
     
     
     /**
