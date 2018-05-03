@@ -52,9 +52,12 @@ public class IntegerVariable extends Variable {
 
     @Override
     public float evaluate(State state) {
-        // 1 - |state.eval(identifier) - value|/|lowerBound - upperBound|
-        // Pas de valeur absolue dans la syntaxe B, le faire en Java.
-        throw new UnsupportedOperationException("Not supported yet."); // OVR
+        String partU = identifier + " - " + value;
+        
+        int resU = Math.abs(Integer.parseInt(state.eval(partU).toString().replace('−', '-')));
+        int resD = Math.abs(lowerBound - upperBound);
+
+        return resU / (float) resD;
     }
     
     public int getLowerBound() {
@@ -62,7 +65,9 @@ public class IntegerVariable extends Variable {
     }
 
     public void setLowerBound(int lowerBound) {
-        // TODO. Verifications sur la borne ici aussi.
+        if (lowerBound >= upperBound)
+            throw new UnsupportedOperationException("Wrong variable settings (range).");
+        
         this.lowerBound = lowerBound;
     }
 
@@ -71,7 +76,9 @@ public class IntegerVariable extends Variable {
     }
 
     public void setUpperBound(int upperBound) {
-        // TODO. Verifications sur la borne ici aussi.
+        if (lowerBound >= upperBound)
+            throw new UnsupportedOperationException("Wrong variable settings (range).");
+        
         this.upperBound = upperBound;
     }
 }
