@@ -111,4 +111,16 @@ public class Path {
         sb.append("]");
         return sb.toString();
     }
+    
+    /**
+     * Print the path in a readable format.
+     */
+    public void prettyPrint() {
+        System.out.println("History: ");
+        
+        for (int i = 0; i < transitions.size(); ++i) {
+            System.out.print("\t" + (i + 1) + ". " + transitions.get(i).getName());
+            System.out.println("(" + transitions.get(i).getParameterPredicate() + ")");
+        }
+    }
 }

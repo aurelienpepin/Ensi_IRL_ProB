@@ -6,8 +6,6 @@ import de.prob.statespace.State;
  * Represents an integer as variable in the B-method.
  * Syntax: varName = INTEGER.
  * 
- * 
- * 
  * @author Aurélien Pepin
  */
 public class IntegerVariable extends Variable {

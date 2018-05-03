@@ -96,6 +96,9 @@ public class AntColony {
     // True if variables can have different weights
     private final boolean WEIGHTING = true;
     
+    // True if the progression of the algorithm should be printed
+    private final boolean VERBOSE = true;
+    
     /**
      * Performance measurement.
      */
@@ -155,12 +158,13 @@ public class AntColony {
             // TODO. If the nest should be moved
             if (T % GLOBAL_PATIENCE == 0) {
                 this.nest = this.getBestSolution();
+                this.printProgression();
                 
-                System.out.println(">> Mouvement du nid: " + this.bestSolution.getScore());
-                System.out.println(">> - Account: " + this.nest.eval("Account"));
-                System.out.println(">> - Customer: " + this.nest.eval("Customer"));
-                System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
-                System.out.println(">>> FROM: " + (new PathFromRoot(nest, origins)).toString());
+//                System.out.println(">> Mouvement du nid: " + this.bestSolution.getScore());
+//                System.out.println(">> - Account: " + this.nest.eval("Account"));
+//                System.out.println(">> - Customer: " + this.nest.eval("Customer"));
+//                System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
+//                System.out.println(">>> FROM: " + (new PathFromRoot(nest, origins)).toString());
 
                 for (Ant a : ants)
                     a.emptyMemory();
@@ -170,7 +174,7 @@ public class AntColony {
         }
         
         System.out.println("End of the algorithm. Best solution: " + this.bestSolution.getScore());
-        System.out.println("NUMBER OF EXPLORED STATES: " + numberOfStates);
+        System.out.println("Total number of explored states: " + numberOfStates);
     }
     
     
@@ -327,6 +331,26 @@ public class AntColony {
         
         numberOfStates++;
         exploredStates.add(state);
+    }
+    
+    /**
+     * When the nest moves, print the interesting variables and their values.
+     * Doesn't print if the VERBOSE flag equals to False.
+     */
+    private void printProgression() {
+        if (!VERBOSE) return;
+        
+        // Print the score of the best current solution
+        System.out.println("\n== Mouvement du nid (score : " + this.bestSolution.getScore() + ") ==");
+        
+        // Print the result of each variable
+        for (Variable variable : finalValues) {
+            System.out.println(" - " + variable.getIdentifier() + ": " + this.bestSolution.getState().eval(variable.getIdentifier()));
+        }
+        
+        // Print the path
+        new PathFromRoot(nest, origins).prettyPrint();
+        System.out.println("===========\n");
     }
     
     public State getNest() {
