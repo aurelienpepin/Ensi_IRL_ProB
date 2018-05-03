@@ -3,7 +3,7 @@ package apicalis;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Modelling of a Pachycondyla Apicalis whose parameters can slightly
+ * (NOT EFFICIENT NOW). Modelling of a Pachycondyla Apicalis whose parameters can slightly
  * differ from the parameters of the colony.
  * 
  * @author Aurélien Pepin
@@ -27,6 +27,8 @@ public class MixedAnt extends Ant {
     /**
      * Change parameters of the ant.
      * Eligible parameters for change: local amplitude, global amplitude.
+     * 
+     * TODO: a more clever use of random?
      */
     private void varyParameters() {
         ThreadLocalRandom rand = ThreadLocalRandom.current();
