@@ -1,5 +1,6 @@
 package apicalis;
 
+import apicalis.solutions.Observable;
 import apicalis.solutions.PartialSolution;
 import de.prob.statespace.State;
 import de.prob.statespace.Trace;
@@ -14,7 +15,7 @@ import java.util.Random;
  * 
  * @author Aurélien Pepin
  */
-public class Ant {
+public class Ant implements Observable {
    
     /**
      * Local patience for the ant.
@@ -130,6 +131,12 @@ public class Ant {
                     currentSize--;
                 }
             }
+            
+            // If the exact searched state was found
+            // At the end because the strategy of the colony isn't necessarily an exit
+            if (Float.compare(exploreEval, 0) == 0) {
+                this.notifyColony(new PartialSolution(exploreSite, exploreEval));
+            }
         }
     }
     
@@ -169,5 +176,10 @@ public class Ant {
      */
     public PartialSolution getBestSolution() {
         return bestSolution;
+    }
+    
+    @Override
+    public void notifyColony(PartialSolution solution) {
+        colony.stopStimulation(solution);
     }
 }

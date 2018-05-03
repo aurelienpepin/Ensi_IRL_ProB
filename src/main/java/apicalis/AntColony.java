@@ -1,6 +1,7 @@
 package apicalis;
 
 import apicalis.paths.PathFromRoot;
+import apicalis.solutions.Observer;
 import apicalis.solutions.PartialSolution;
 import apicalis.variables.Variable;
 import de.prob.statespace.State;
@@ -19,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * 
  * @author Aurélien Pepin
  */
-public class AntColony {
+public class AntColony implements Observer {
     
     /**
      * Position of the nest of the colony.
@@ -103,6 +104,9 @@ public class AntColony {
     // True if the progression of the algorithm should be printed
     private final boolean VERBOSE = true;
     
+    // True if the algorithm should stop from the perfect solution
+    private final boolean IMMEDIATE_STOP = true;
+            
     /**
      * Performance measurement.
      */
@@ -155,7 +159,7 @@ public class AntColony {
         // The initial site of the nest is the root of the state space.
         int T = 1;
         
-        while (numberOfEvaluations < MAX_NUMBER_OF_EVALUATIONS && (this.bestSolution == null || this.bestSolution.getScore() > 0)) {
+        while (numberOfEvaluations < MAX_NUMBER_OF_EVALUATIONS /*&& (this.bestSolution == null || this.bestSolution.getScore() > 0) */) {
             // Local behaviour of ants
             for (Ant a : ants) a.search();
             
@@ -171,8 +175,25 @@ public class AntColony {
             T++;
         }
         
+        this.printProgression();
         System.out.println("End of the algorithm. Best solution: " + this.bestSolution.getScore());
         System.out.println("Total number of explored states: " + numberOfStates);
+    }
+    
+    
+    /**
+     * If the score 0.0 is found, the colony is notified.
+     * @param solution  A solution whose score is 0.0
+     */
+    @Override
+    public void stopStimulation(PartialSolution solution) {
+        this.bestSolution = solution;
+        this.printProgression();
+        
+        System.out.println("End of the algorithm. Best solution: " + this.bestSolution.getScore());
+        System.out.println("Total number of explored states: " + numberOfStates);
+        
+        System.exit(0);
     }
     
     

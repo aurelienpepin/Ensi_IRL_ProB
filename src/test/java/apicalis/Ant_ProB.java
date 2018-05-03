@@ -10,9 +10,7 @@ import de.prob.scripting.ModelTranslationError;
 import de.prob.statespace.StateSpace;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Combination of ProB Api and Apicalis.
@@ -54,7 +52,7 @@ public class Ant_ProB {
         // variables.add(new ClassVariable("Account", "{cpt1,cpt2,cpt3}")); // ?
         variables.add(new ClassVariable("AccountOwner", "{(cpt1|->Bob),(cpt2|->Bob),(cpt3|->Paul)}", 2));
         
-        AntColony colony = new AntColony(4, sspace.getRoot(), variables);
+        AntColony colony = new AntColony(5, sspace.getRoot(), variables);
         colony.simulate();
     }
 }
