@@ -153,18 +153,12 @@ public class AntColony {
         
         while (numberOfEvaluations < 500 && (this.bestSolution == null || this.bestSolution.getScore() > 0)) {
             // Local behaviour of ants
-            for (Ant a : ants) a.search();  // TODO: voir si parallélisable?
+            for (Ant a : ants) a.search();
             
             // TODO. If the nest should be moved
             if (T % GLOBAL_PATIENCE == 0) {
                 this.nest = this.getBestSolution();
                 this.printProgression();
-                
-//                System.out.println(">> Mouvement du nid: " + this.bestSolution.getScore());
-//                System.out.println(">> - Account: " + this.nest.eval("Account"));
-//                System.out.println(">> - Customer: " + this.nest.eval("Customer"));
-//                System.out.println(">> - AccountOwner: " + this.nest.eval("AccountOwner"));
-//                System.out.println(">>> FROM: " + (new PathFromRoot(nest, origins)).toString());
 
                 for (Ant a : ants)
                     a.emptyMemory();
@@ -217,6 +211,7 @@ public class AntColony {
 
                 this.fillOrigins(randState, randTransition);
             } else {
+                System.out.println("RETOUR EN ARRIERE");
                 randTransition = this.origins.get(s);
                 randState = randTransition.getSource();
             }
