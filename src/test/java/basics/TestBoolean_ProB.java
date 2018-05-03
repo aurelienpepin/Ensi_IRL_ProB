@@ -1,7 +1,7 @@
 package basics;
 
 import apicalis.AntColony;
-import apicalis.variables.ClassVariable;
+import apicalis.variables.BooleanVariable;
 import apicalis.variables.IntegerVariable;
 import apicalis.variables.Variable;
 import de.prob.Main;
@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manipulation of integers within ProB.
+ * Manipulation of booleans within ProB.
  * @author Aurélien Pepin
  */
-public class Scheduler_ProB {
-
+public class TestBoolean_ProB {
+    
     /**
      * @param args the command line arguments
      */
@@ -38,10 +38,10 @@ public class Scheduler_ProB {
         
         System.exit(0);
     }
-
+    
     protected static void testProB(Api api) throws IOException, ModelTranslationError {
         // Load the state space
-        StateSpace sspace = api.b_load("machines/ACounter.mch");
+        StateSpace sspace = api.b_load("machines/RussianPostalPuzzle.mch");
         
         ClassicalBModel model = (ClassicalBModel) sspace.getModel();
         ClassicalBMachine machine = model.getMainMachine();
@@ -50,10 +50,9 @@ public class Scheduler_ProB {
          * APICALIS ALGORITHM.
          */        
         List<Variable> variables = new ArrayList<>();
-        variables.add(new IntegerVariable("ii", "6", 0, 10));
-        variables.add(new IntegerVariable("jj", "6", 0, 10));
+        variables.add(new BooleanVariable("box_contains_gem", false));
         
-        AntColony colony = new AntColony(1, sspace.getRoot(), variables);
+        AntColony colony = new AntColony(10, sspace.getRoot(), variables);
         colony.simulate();
     }
 }

@@ -13,8 +13,8 @@ public class IntegerVariable extends Variable {
     private int lowerBound;
     private int upperBound;
     
-    public IntegerVariable(String identifier, String value, int lowerBound, int upperBound) {
-        super(identifier, value);
+    public IntegerVariable(String identifier, int value, int lowerBound, int upperBound) {
+        super(identifier, Integer.toString(value));
         
         if (lowerBound >= upperBound)
             throw new UnsupportedOperationException("Wrong variable initialization (range).");
@@ -23,8 +23,8 @@ public class IntegerVariable extends Variable {
         this.upperBound = upperBound;
     }
 
-    public IntegerVariable(String identifier, String value, double weight, int lowerBound, int upperBound) {
-        super(identifier, value, weight);
+    public IntegerVariable(String identifier, int value, double weight, int lowerBound, int upperBound) {
+        super(identifier, Integer.toString(value), weight);
         
         if (lowerBound >= upperBound)
             throw new UnsupportedOperationException("Wrong variable initialization (range).");
@@ -33,8 +33,8 @@ public class IntegerVariable extends Variable {
         this.upperBound = upperBound;
     }
 
-    public IntegerVariable(String identifier, String value) {
-        super(identifier, value);
+    public IntegerVariable(String identifier, int value) {
+        super(identifier, Integer.toString(value));
         
         this.lowerBound = Integer.MIN_VALUE;
         this.upperBound = Integer.MAX_VALUE;
@@ -48,6 +48,12 @@ public class IntegerVariable extends Variable {
     }
     
 
+    /**
+     * Evaluation computes: |identifier - value|/|lowerBound - upperBound|.
+     * 
+     * @param state
+     * @return 
+     */
     @Override
     public float evaluate(State state) {
         String partU = identifier + " - " + value;
