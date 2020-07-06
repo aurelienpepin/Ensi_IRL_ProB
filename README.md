@@ -6,7 +6,7 @@ This project is part of the course unit *Introduction to research*.
 
 ## Installation
 ```sh
-# TODO
+maven clean install
 ```
 
 ## Improvements
